@@ -98,7 +98,6 @@ public class FormLogin extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         String username = jTextField1.getText();
         String pw = jPasswordField1.getText();
-        boolean sukses = false;
         
         try {
             Class.forName("com.mysql.jdbc.Driver");
@@ -108,18 +107,25 @@ public class FormLogin extends javax.swing.JFrame {
             ResultSet rs = st.executeQuery(sql);
             if(rs.next())
             {
-                if(rs.getString("role").equals("admin"))
+                if(rs.getInt("status")==0)
                 {
-                    userlogin = "ADMIN";
-                    this.dispose();
-                    sukses=true;
-                } 
-                else if(rs.getString("role").equals("user"))
-                {
-                    userlogin = rs.getString("nama");
-                    this.dispose();
-                    sukses=true;
-                } 
+                    if(rs.getString("role").equals("admin"))
+                    {
+                        userlogin = rs.getString("nama");
+                        this.dispose();
+                        FormMenuAdmin frm = new FormMenuAdmin(userlogin/*, arr1*/);
+                        frm.setVisible(true);
+                    } 
+                    else if(rs.getString("role").equals("user"))
+                    {
+                        userlogin = rs.getString("nama");
+                        this.dispose();
+                    }
+                }
+                else{
+                    JOptionPane.showMessageDialog(null,"Status Anda Tidak Aktif!");
+                }
+                 
             }
             else
             {
@@ -129,15 +135,6 @@ public class FormLogin extends javax.swing.JFrame {
         catch (Exception e) {
             JOptionPane.showMessageDialog(null,"Gagal terkoneksi "+e);
         }
-        if (sukses) {
-            FormMain frm = new FormMain(/*userlogin/*, arr1*/);
-            frm.setVisible(true);
-            dispose();
-        }
-        sukses = false;
-        jPasswordField1.setText("");
-        jTextField1.setText("");
-        
         
     }//GEN-LAST:event_jButton1ActionPerformed
 
