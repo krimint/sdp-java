@@ -28,6 +28,7 @@ public class FormManajemenUser extends javax.swing.JFrame {
     PreparedStatement st=null;
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
     String jk = "";
+    int id = 9999999;
     
     public void tanggal() {
         Date tgl = new Date();
@@ -35,7 +36,12 @@ public class FormManajemenUser extends javax.swing.JFrame {
     }
     
     public void tampilkan_data() {
-        DefaultTableModel model = new DefaultTableModel();
+        DefaultTableModel model = new DefaultTableModel(){
+             @Override
+                public boolean isCellEditable(int row, int column) {
+                return false;
+             }
+        };
         model.addColumn("ID");
         model.addColumn("USERNAME");
         model.addColumn("PASSWORD");
@@ -46,7 +52,6 @@ public class FormManajemenUser extends javax.swing.JFrame {
         model.addColumn("ROLE");
 
         //membuat table tidak bisa diselect
-        jTable1.setEnabled(false);
         try {
             String sql = "SELECT * FROM pengguna WHERE status=0";
             java.sql.Connection conn = (Connection) PointOfSales.configDB();
@@ -162,7 +167,6 @@ public class FormManajemenUser extends javax.swing.JFrame {
         jDateChooser1.setDateFormatString("yyyy-MM-dd");
         jDateChooser1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
 
-        jComboBox1.setEditable(true);
         jComboBox1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "admin", "user" }));
 
@@ -309,6 +313,11 @@ public class FormManajemenUser extends javax.swing.JFrame {
                 "ID", "USERNAME", "PASSWORD", "NAMA LENGKAP", "JENIS KELAMIN", "ALAMAT", "TANGGAL LAHIR", "ROLE"
             }
         ));
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(jTable1);
 
         jLabel9.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
@@ -488,6 +497,19 @@ public class FormManajemenUser extends javax.swing.JFrame {
             jDateChooser1.setEnabled(true);
             jComboBox1.setEnabled(true);
     }//GEN-LAST:event_jRadioButton5ActionPerformed
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        // TODO add your handling code here:
+        int baris = jTable1.getSelectedRow();
+        String isiid = jTable1.getValueAt(baris,0).toString();
+        id = Integer.parseInt(isiid);
+        txtUsername.setText(jTable1.getValueAt(baris,1).toString());
+        txtPassword.setText(jTable1.getValueAt(baris,2).toString());
+        txtNama.setText(jTable1.getValueAt(baris,3).toString());
+        buttonGroup1.clearSelection();
+        txtAlamat.setText(jTable1.getValueAt(baris,5).toString());
+        jComboBox1.setSelectedIndex(0);   
+    }//GEN-LAST:event_jTable1MouseClicked
 
     /**
      * @param args the command line arguments

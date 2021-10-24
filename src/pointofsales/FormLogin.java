@@ -120,6 +120,8 @@ public class FormLogin extends javax.swing.JFrame {
                     {
                         userlogin = rs.getString("nama");
                         this.dispose();
+                        FormMain frm = new FormMain(/*userlogin/*, arr1*/);
+                        frm.setVisible(true);
                     }
                 }
                 else{
